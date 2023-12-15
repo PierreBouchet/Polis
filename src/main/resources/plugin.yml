@@ -1,0 +1,4 @@
+name: Polis
+version: '${project.version}'
+main: com.gylderia.polis.Polis
+api-version: '1.20'
