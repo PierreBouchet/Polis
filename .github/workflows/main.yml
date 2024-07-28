@@ -28,7 +28,6 @@ jobs:
         java-version: '17'
 
     - name: Build with Maven
-      id: build
       run: mvn clean package
 
     - name: Deploy via SSH
@@ -37,4 +36,4 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H gylderia.fr >> ~/.ssh/known_hosts
-        rsync -avz --chmod=F664 --no-times target/polis.jar github@gylderia.fr:/var/lib/pterodactyl/volumes/gylderia/plugins/
+        rsync -avz --chmod=F664 --no-times target/Polis.jar github@gylderia.fr:/var/lib/pterodactyl/volumes/gylderia/plugins/
