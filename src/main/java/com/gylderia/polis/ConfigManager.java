@@ -36,7 +36,7 @@ public class ConfigManager {
     // Copy missing resources from the JAR to the plugin's data folder
     private void copyMissingResources(File configDir) {
         try {
-            URL resourceUrl = plugin.getClass().getClassLoader().getResource("");
+            URL resourceUrl = plugin.getClass().getClassLoader().getResource("resources");
             if (resourceUrl == null) {
                 plugin.getLogger().log(Level.WARNING, "Resource directory not found.");
                 return;
