@@ -31,14 +31,10 @@ jobs:
       id: build
       run: mvn clean package
 
-    - name: Extract version
-      id: extract_version
-      run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-
     - name: Deploy via SSH
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H gylderia.fr >> ~/.ssh/known_hosts
-        rsync -avz --chmod=F664 --no-times target/export/Polis-${{ steps.extract_version.outputs.version }}.jar github@gylderia.fr:/var/lib/pterodactyl/volumes/gylderia/plugins/
+        rsync -avz --chmod=F664 --no-times target/polis.jar github@gylderia.fr:/var/lib/pterodactyl/volumes/gylderia/plugins/
