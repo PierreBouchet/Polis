@@ -51,7 +51,11 @@
             </resource>
         </resources>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/PierreBouchet/Polis</url>
+        </repository>
     <repositories>
         <repository>
             <id>papermc-repo</id>
