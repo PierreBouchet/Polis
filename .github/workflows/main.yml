@@ -20,23 +20,25 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-          
+
     - name: Set up JDK 17
       uses: actions/setup-java@v2
       with:
         distribution: 'temurin'
         java-version: '17'
-        
+
     - name: Build with Maven
+      id: build
       run: mvn clean package
+
+    - name: Extract version
+      id: extract_version
+      run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
 
     - name: Deploy via SSH
       run: |
         mkdir -p ~/.ssh
-        # Add SSH key to the agent
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        # Add the server to known hosts
         ssh-keyscan -H gylderia.fr >> ~/.ssh/known_hosts
-        # Copy the file to the remote server
-        rsync -avz --chmod=F664 --no-times target/polis.jar github@gylderia.fr:/var/lib/pterodactyl/volumes/gylderia/plugins/    
+        rsync -avz --chmod=F664 --no-times target/export/Polis-${{ steps.extract_version.outputs.version }}.jar github@gylderia.fr:/var/lib/pterodactyl/volumes/gylderia/plugins/
