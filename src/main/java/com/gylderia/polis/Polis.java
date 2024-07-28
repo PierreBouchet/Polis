@@ -13,6 +13,8 @@ public final class Polis extends JavaPlugin {
     public void onEnable() {
         // Initialize the ConfigManager and load configurations
         ConfigManager configManager = new ConfigManager(this);
+        configManager.setupConfig(); // Ensure the config is set up before accessing it
+
         String host = configManager.getConfig().getString("host");
         String port = configManager.getConfig().getString("port");
         String database = configManager.getConfig().getString("database");
@@ -28,10 +30,8 @@ public final class Polis extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        configManager.setupConfig();
 
         getLogger().info("Polis plugin enabled");
-
     }
 
     @Override
@@ -39,5 +39,4 @@ public final class Polis extends JavaPlugin {
         // Plugin shutdown logic
         getLogger().info("Polis plugin disabled");
     }
-
 }
