@@ -6,11 +6,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class ConfigManager {
     private final JavaPlugin plugin;
@@ -23,7 +25,7 @@ public class ConfigManager {
 
     // Load all configuration files from the plugin's data folder
     private void loadConfigs() {
-        File configDir = new File(plugin.getDataFolder(), "Polis");
+        File configDir = plugin.getDataFolder();
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
@@ -34,7 +36,12 @@ public class ConfigManager {
     // Copy missing resources from the JAR to the plugin's data folder
     private void copyMissingResources(File configDir) {
         try {
-            Path sourceDir = new File(plugin.getClass().getClassLoader().getResource("").toURI()).toPath();
+            URL resourceUrl = plugin.getClass().getClassLoader().getResource("");
+            if (resourceUrl == null) {
+                plugin.getLogger().log(Level.WARNING, "Resource directory not found.");
+                return;
+            }
+            Path sourceDir = new File(resourceUrl.toURI()).toPath();
             Files.walk(sourceDir).forEach(source -> {
                 Path destination = configDir.toPath().resolve(sourceDir.relativize(source));
                 try {
@@ -76,7 +83,7 @@ public class ConfigManager {
         FileConfiguration config = configs.get(fileName);
         if (config != null) {
             try {
-                config.save(new File(plugin.getDataFolder(), "Polis/" + fileName));
+                config.save(new File(plugin.getDataFolder(), fileName));
             } catch (IOException e) {
                 e.printStackTrace();
             }
