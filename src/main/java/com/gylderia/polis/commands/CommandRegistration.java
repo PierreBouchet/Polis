@@ -15,5 +15,6 @@ public class CommandRegistration {
     private void registerCommands() {
         //commandManager.registerCommand("example", new ExampleCommand());
         commandManager.registerCommand("townCreate", new TownCreate());
+        System.out.println("Commands registered");
     }
 }

@@ -25,6 +25,8 @@ public class CommandManager implements CommandExecutor {
             System.out.println("You have executed the " + label + " command!");
             return gylderiaCommand.execute(sender, command, label, args);
         }
+        //send a debug message to console
+        System.out.println("Command not found: " + label);
         return false;
     }
 
