@@ -21,6 +21,8 @@ public class CommandManager implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         GylderiaCommand gylderiaCommand = commands.get(label);
         if (gylderiaCommand != null) {
+            //send a debug message to console
+            System.out.println("You have executed the " + label + " command!");
             return gylderiaCommand.execute(sender, command, label, args);
         }
         return false;

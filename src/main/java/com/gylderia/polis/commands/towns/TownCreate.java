@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 public class TownCreate implements GylderiaCommand {
     @Override
     public boolean execute(CommandSender sender, Command command, String label, String[] args) {
+        //send to console a debug message
+        System.out.println("You have executed the townCreate command!");
         if (sender instanceof Player) {
             Player player = (Player) sender;
             player.sendMessage("You have executed the townCreate command!");
