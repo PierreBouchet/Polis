@@ -1,5 +1,6 @@
 package com.gylderia.polis;
 
+import com.gylderia.polis.commands.CommandRegistration;
 import com.gylderia.polis.utils.ConfigManager;
 import com.gylderia.polis.utils.mysql.MySQLAccess;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +31,8 @@ public final class Polis extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        new CommandRegistration(this); // Register commands
 
         getLogger().info("Polis plugin enabled");
     }
