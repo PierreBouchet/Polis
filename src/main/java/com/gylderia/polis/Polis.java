@@ -1,10 +1,10 @@
 package com.gylderia.polis;
 
+import com.gylderia.polis.listeners.PlayerJoinListener;
 import com.gylderia.polis.utils.ConfigManager;
 import com.gylderia.polis.utils.mysql.MySQLAccess;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
@@ -36,6 +36,8 @@ public final class Polis extends JavaPlugin {
             this.cacheManager = new CacheManager();
             this.playerManager = new PlayerManager(mySQLAccess.getConnection(), this);
 
+            registerEvents();
+
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE,"Could not establish a connection to the database: ", e);
             getServer().getPluginManager().disablePlugin(this);
@@ -57,6 +59,9 @@ public final class Polis extends JavaPlugin {
         return playerManager;
     }
 
+    public void registerEvents() {
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+    }
 
     @Override
     public void onDisable() {
