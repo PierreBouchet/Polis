@@ -13,10 +13,12 @@ public class PlayerManager {
 
     private Connection connection;
     private Polis plugin;
+    private CacheManager cacheManager;
 
     public PlayerManager(Connection connection, Polis polis) {
         this.connection = connection;
         this.plugin = polis;
+        this.cacheManager = plugin.getCacheManager();
     }
 
     public void createDefaultPlayer(Player player) {
@@ -35,7 +37,7 @@ public class PlayerManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //TODO cache
+        cacheManager.putPlayer(uuid, new GylderiaPlayer(uuid, player.getName()));
     }
 
     public void setPlayerTown(UUID uuid, Town town) {
