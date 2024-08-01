@@ -27,7 +27,7 @@ public class PlayerManager {
 
         try {
             PreparedStatement stmt = connection.prepareStatement(
-                    "INSERT INTO players (uuid, name) VALUES (?, ?, ?, ?)"
+                    "INSERT INTO players (uuid, name) VALUES (?, ?)"
             );
             stmt.setBytes(1, uuidBytes);
             stmt.setString(2, player.getName());
