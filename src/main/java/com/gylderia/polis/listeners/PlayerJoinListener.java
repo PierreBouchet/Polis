@@ -18,11 +18,19 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         //debug message
+
         System.out.println("Player " + player.getName() + " joined the server.");
         if (!playerManager.isPlayerInDatabase(player.getUniqueId())) {
             //debug message
             System.out.println("Player " + player.getName() + " is not in the database.");
             playerManager.createDefaultPlayer(player);
+        } else {
+            //debug message
+            System.out.println("Player " + player.getName() + " is in the database.");
+            //get player's data from the database
+            playerManager.loadPlayer(player);
         }
+
+
     }
 }

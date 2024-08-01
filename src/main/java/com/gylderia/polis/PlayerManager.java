@@ -75,4 +75,31 @@ public class PlayerManager {
         }
         return false;
     }
+
+    public void loadPlayer(Player player) {
+        //debug message
+        System.out.println("Loading player " + player.getName());
+        UUID uniqueId = player.getUniqueId();
+        String playerName = player.getName();
+        byte[] uuidBytes = utils.convertUUIDtoBytes(uniqueId);
+        try {
+            PreparedStatement stmt = connection.prepareStatement(
+                    "SELECT * FROM players WHERE uuid = ?"
+            );
+            stmt.setBytes(1, uuidBytes);
+            ResultSet rs = stmt.executeQuery();
+            byte[] townUUIDBytes = rs.getBytes("ville");
+            if (townUUIDBytes != null) {
+                //debug message
+                System.out.println("Player " + playerName + " has a town");
+                cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName));
+            } else {
+                //debug message
+                System.out.println("Player " + playerName + " does not have a town");
+                cacheManager.putPlayer(uniqueId, new GylderiaPlayer(uniqueId, playerName));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

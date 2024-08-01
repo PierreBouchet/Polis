@@ -19,7 +19,7 @@ public class CacheManager {
         playerCache.put(uuid, gylderiaPlayer);
     }
 
-    public Town getTown(UUID uuid) {
+    public Town getTown(byte[] uuid) {
         return townCache.get(uuid);
     }
 
@@ -27,7 +27,7 @@ public class CacheManager {
         return playerCache.get(uuid);
     }
 
-    public void removeTown(UUID uuid) {
+    public void removeTown(byte[] uuid) {
         townCache.remove(uuid);
     }
 
