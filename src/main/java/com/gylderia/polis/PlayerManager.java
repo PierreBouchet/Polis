@@ -22,7 +22,6 @@ public class PlayerManager {
     }
 
     public void createDefaultPlayer(Player player) {
-        //debug message
         System.out.println("Creating default player for " + player.getName());
         UUID uuid = player.getUniqueId();
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
@@ -38,9 +37,7 @@ public class PlayerManager {
             e.printStackTrace();
         }
         cacheManager.putPlayer(uuid, new GylderiaPlayer(uuid, player.getName()));
-        //debug message : is player cached ?
-
-
+        System.out.println("Player cached: " + (cacheManager.getPlayer(uuid) != null));
     }
 
     public void setPlayerTown(UUID uuid, Town town) {
@@ -77,7 +74,6 @@ public class PlayerManager {
     }
 
     public void loadPlayer(Player player) {
-        //debug message
         System.out.println("Loading player " + player.getName());
         UUID uniqueId = player.getUniqueId();
         String playerName = player.getName();
@@ -88,15 +84,17 @@ public class PlayerManager {
             );
             stmt.setBytes(1, uuidBytes);
             ResultSet rs = stmt.executeQuery();
-            byte[] townUUIDBytes = rs.getBytes("ville");
-            if (townUUIDBytes != null) {
-                //debug message
-                System.out.println("Player " + playerName + " has a town");
-                cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName));
+            if (rs.next()) { // Move cursor to the first row
+                byte[] townUUIDBytes = rs.getBytes("ville");
+                if (townUUIDBytes != null) {
+                    System.out.println("Player " + playerName + " has a town");
+                    cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName));
+                } else {
+                    System.out.println("Player " + playerName + " does not have a town");
+                    cacheManager.putPlayer(uniqueId, new GylderiaPlayer(uniqueId, playerName));
+                }
             } else {
-                //debug message
-                System.out.println("Player " + playerName + " does not have a town");
-                cacheManager.putPlayer(uniqueId, new GylderiaPlayer(uniqueId, playerName));
+                System.out.println("No player found with UUID: " + uniqueId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
