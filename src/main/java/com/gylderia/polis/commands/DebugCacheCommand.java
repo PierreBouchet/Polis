@@ -27,7 +27,13 @@ public class DebugCacheCommand implements CommandExecutor {
         // Display player cache
         sender.sendMessage("Player Cache:");
         for (Map.Entry<UUID, GylderiaPlayer> entry : cacheManager.getPlayerCache().entrySet()) {
-            sender.sendMessage("UUID: " + entry.getKey() + ", Town: " + entry.getValue().getTown() + ", Name: " + entry.getValue().getName());
+            GylderiaPlayer player = entry.getValue();
+            sender.sendMessage("UUID: " + entry.getKey() + ", Name: " + player.getName());
+            if (player.hasTown()) {
+                sender.sendMessage("Town: " + player.getTown().getName());
+            } else {
+                sender.sendMessage("Town: None");
+            }
         }
 
         // Display town cache
