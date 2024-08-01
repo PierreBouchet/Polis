@@ -1,9 +1,7 @@
 package com.gylderia.polis.commands;
 
 import com.google.common.cache.Cache;
-import com.gylderia.polis.CacheManager;
-import com.gylderia.polis.Polis;
-import com.gylderia.polis.TownManager;
+import com.gylderia.polis.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,11 +12,13 @@ import java.util.UUID;
 public class TownCreate implements CommandExecutor {
     TownManager townManager;
     CacheManager cacheManager;
+    PlayerManager playerManager;
 
     public TownCreate(Polis plugin) {
 
         this.townManager = plugin.getTownManager();
         this.cacheManager = plugin.getCacheManager();
+        this.playerManager = plugin.getPlayerManager();
     }
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -32,7 +32,8 @@ public class TownCreate implements CommandExecutor {
                 if (player.hasPermission("polis.town.create")) {
                     if (!cacheManager.getPlayer(player.getUniqueId()).hasTown()) {
                         //create town
-                        townManager.newTown(args[0]);
+                        Town town = townManager.newTown(args[0]);
+                        playerManager.setPlayerTown(uuid, town);
                     } else {
                         player.sendMessage("You are already in a town!");
                     }

@@ -27,7 +27,7 @@ public class TownManager {
         plugin.getCommand("towncreate").setExecutor(new TownCreate(plugin));
     }
 
-    public boolean newTown(String name) {
+    public Town newTown(String name) {
         UUID uuid = UUID.randomUUID();
 
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
@@ -43,10 +43,10 @@ public class TownManager {
             Town town = new Town(name, new Date(), uuidBytes);
             cacheManager.putTown(uuidBytes, town);
 
-            return true;
+            return town;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
         //TODO: Cache the town
     }

@@ -20,6 +20,8 @@ public class PlayerManager {
     }
 
     public void createDefaultPlayer(Player player) {
+        //debug message
+        System.out.println("Creating default player for " + player.getName());
         UUID uuid = player.getUniqueId();
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
 
