@@ -5,4 +5,4 @@ api-version: '1.20'
 commands:
   townCreate:
     description: Create a town
-    usage: /townCreate
+    usage: /townCreate <name>
