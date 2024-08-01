@@ -24,6 +24,7 @@ public class TownManager {
         this.connection = connection;
         this.plugin = plugin;
         this.cacheManager = plugin.getCacheManager();
+        loadAllTowns();
         plugin.getCommand("towncreate").setExecutor(new TownCreate(plugin, this));
     }
 
