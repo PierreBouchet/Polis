@@ -19,6 +19,7 @@ public class TownCreate implements CommandExecutor {
         this.townManager = plugin.getTownManager();
         this.cacheManager = plugin.getCacheManager();
         this.playerManager = plugin.getPlayerManager();
+
     }
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -27,6 +28,11 @@ public class TownCreate implements CommandExecutor {
                     sender.sendMessage("Usage: /towncreate <name>");
                     return true;
                 }
+                if (cacheManager == null) {
+                    System.out.println("cacheManager is null");
+                    return true;
+                }
+
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 if (player.hasPermission("polis.town.create")) {

@@ -38,6 +38,9 @@ public class PlayerManager {
             e.printStackTrace();
         }
         cacheManager.putPlayer(uuid, new GylderiaPlayer(uuid, player.getName()));
+        //debug message : is player cached ?
+
+
     }
 
     public void setPlayerTown(UUID uuid, Town town) {
