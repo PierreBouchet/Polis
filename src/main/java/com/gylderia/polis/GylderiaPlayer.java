@@ -3,9 +3,9 @@ package com.gylderia.polis;
 import java.util.UUID;
 
 public class GylderiaPlayer {
-    private final Town town;
+    private  Town town;
     private final UUID uuid;
-    private final String name;
+    private  String name;
 
     public GylderiaPlayer(Town town, UUID uuid, String name) {
         this.town = town;
@@ -24,6 +24,17 @@ public class GylderiaPlayer {
             throw new IllegalStateException("Player does not have a town");
         }
         return town;
+    }
+
+    public void setTown(Town town) {
+        if (this.town != null) {
+            throw new IllegalStateException("Player already has a town");
+        }
+        this.town = town;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean hasTown() {

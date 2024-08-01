@@ -35,6 +35,7 @@ public class TownCreate implements CommandExecutor {
                         //create town
                         Town town = townManager.newTown(args[0]);
                         playerManager.setPlayerTown(uuid, town);
+                        cacheManager.getPlayer(uuid).setTown(town);
                     } else {
                         player.sendMessage("You are already in a town!");
                     }
