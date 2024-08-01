@@ -32,8 +32,8 @@ public final class Polis extends JavaPlugin {
 
             mySQLAccess.establishConnection(host, port, database, username, password);
             getLogger().info("Successfully established a connection to the database.");
-            this.townManager = new TownManager(mySQLAccess.getConnection(), this);
             this.cacheManager = new CacheManager();
+            this.townManager = new TownManager(mySQLAccess.getConnection(), this);
             this.playerManager = new PlayerManager(mySQLAccess.getConnection(), this);
 
             registerEvents();

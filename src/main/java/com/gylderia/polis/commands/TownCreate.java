@@ -28,11 +28,6 @@ public class TownCreate implements CommandExecutor {
                     sender.sendMessage("Usage: /towncreate <name>");
                     return true;
                 }
-                if (cacheManager == null) {
-                    System.out.println("cacheManager is null");
-                    return true;
-                }
-
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 if (player.hasPermission("polis.town.create")) {
