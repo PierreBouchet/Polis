@@ -14,9 +14,9 @@ public class TownCreate implements CommandExecutor {
     CacheManager cacheManager;
     PlayerManager playerManager;
 
-    public TownCreate(Polis plugin) {
+    public TownCreate(Polis plugin, TownManager townManager) {
 
-        this.townManager = plugin.getTownManager();
+        this.townManager = townManager;
         this.cacheManager = plugin.getCacheManager();
         this.playerManager = plugin.getPlayerManager();
 
