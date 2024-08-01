@@ -49,7 +49,7 @@ public class PlayerManager {
 
         try {
             PreparedStatement stmt = connection.prepareStatement(
-                    "UPDATE players SET town_uuid = ? WHERE uuid = ?"
+                    "UPDATE players SET ville = ? WHERE uuid = ?"
             );
             stmt.setBytes(1, townUUIDBytes);
             stmt.setBytes(2, uuidBytes);
