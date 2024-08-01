@@ -6,3 +6,6 @@ commands:
   townCreate:
     description: Create a town
     usage: /townCreate <name>
+  debugcache:
+    description: Debug cache
+    usage: /debugcache

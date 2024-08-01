@@ -1,5 +1,6 @@
 package com.gylderia.polis;
 
+import com.gylderia.polis.commands.DebugCacheCommand;
 import com.gylderia.polis.listeners.PlayerJoinListener;
 import com.gylderia.polis.utils.ConfigManager;
 import com.gylderia.polis.utils.mysql.MySQLAccess;
@@ -37,6 +38,8 @@ public final class Polis extends JavaPlugin {
             this.townManager = new TownManager(mySQLAccess.getConnection(), this);
 
             registerEvents();
+
+            this.getCommand("debugcache").setExecutor(new DebugCacheCommand(this));
 
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE,"Could not establish a connection to the database: ", e);

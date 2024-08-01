@@ -48,7 +48,6 @@ public class TownManager {
             e.printStackTrace();
             return null;
         }
-        //TODO: Cache the town
     }
 
 

@@ -35,6 +35,14 @@ public class CacheManager {
         playerCache.remove(uuid);
     }
 
+    public Map<UUID, GylderiaPlayer> getPlayerCache() {
+        return playerCache;
+    }
+
+    public Map<byte[], Town> getTownCache() {
+        return townCache;
+    }
+
 
 }
 

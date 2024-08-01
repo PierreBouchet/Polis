@@ -57,7 +57,6 @@ public class PlayerManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //TODO cache
     }
 
     public boolean isPlayerInDatabase(UUID uuid) {
