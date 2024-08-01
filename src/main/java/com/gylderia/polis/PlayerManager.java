@@ -90,6 +90,7 @@ public class PlayerManager {
                 //debug message
                 System.out.println("Town UUID: " + Arrays.toString(townUUIDBytes));
                 if (townUUIDBytes != null) {
+                    System.out.println(cacheManager.getTown(townUUIDBytes));
                     System.out.println("Player " + playerName + " has a town");
                     cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName));
                 } else {
