@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class PlayerManager {
@@ -86,6 +87,8 @@ public class PlayerManager {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) { // Move cursor to the first row
                 byte[] townUUIDBytes = rs.getBytes("ville");
+                //debug message
+                System.out.println("Town UUID: " + Arrays.toString(townUUIDBytes));
                 if (townUUIDBytes != null) {
                     System.out.println("Player " + playerName + " has a town");
                     cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName));
