@@ -2,6 +2,7 @@ package com.gylderia.polis;
 
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -19,8 +20,19 @@ public class CacheManager {
         playerCache.put(uuid, gylderiaPlayer);
     }
 
-    public Town getTown(byte[] uuid) {
-        return townCache.get(uuid);
+    public Town getTown(byte[] uuidBytes) {
+        for (byte[] key : townCache.keySet()) {
+            //print uuidBytes with debug info
+            System.out.println("db: " + Arrays.toString(uuidBytes));
+            //print key with debug info
+            System.out.println("cache: " + Arrays.toString(key));
+            if (Arrays.equals(key, uuidBytes)) {
+                //debug message
+                System.out.println("Town found in cache");
+                return townCache.get(key);
+            }
+        }
+        return null;
     }
 
     public GylderiaPlayer getPlayer(UUID uuid) {
