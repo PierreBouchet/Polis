@@ -91,13 +91,13 @@ public class PlayerManager {
             if (rs.next()) { // Move cursor to the first row
                 byte[] townUUIDBytes = rs.getBytes("ville");
                 byte[] rang = rs.getBytes("rang");
-                    //TODO Gérer custom ranks
-
-
                 //debug message
                 System.out.println("Town UUID: " + Arrays.toString(townUUIDBytes));
                 if (cacheManager.getTown(townUUIDBytes) != null) {
                     rank = cacheManager.getTown(townUUIDBytes).getRank(rang);
+                    if (rank == null) {
+                        System.out.println("Rank not found in town");
+                    }
                     System.out.println(cacheManager.getTown(townUUIDBytes));
                     System.out.println("Player " + playerName + " has a town");
                     cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName, rank));

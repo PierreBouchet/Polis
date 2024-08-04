@@ -34,7 +34,11 @@ public class DebugCacheCommand implements CommandExecutor {
                 Town town = player.getTown();
                 sender.sendMessage("Town: " + town.getName());
                 //send player rank
-                sender.sendMessage("Rank: " + player.getRank().getDisplayName());
+                if (player.getRank() == null) { //TODO delete after debug
+                    sender.sendMessage("Rank: None");
+                } else {
+                    sender.sendMessage("Rank: " + player.getRank().getDisplayName());
+                }
             } else {
                 sender.sendMessage("Town: None");
             }

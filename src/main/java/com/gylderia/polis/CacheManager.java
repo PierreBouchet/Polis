@@ -22,13 +22,7 @@ public class CacheManager {
 
     public Town getTown(byte[] uuidBytes) {
         for (byte[] key : townCache.keySet()) {
-            //print uuidBytes with debug info
-            System.out.println("db: " + Arrays.toString(uuidBytes));
-            //print key with debug info
-            System.out.println("cache: " + Arrays.toString(key));
             if (Arrays.equals(key, uuidBytes)) {
-                //debug message
-                System.out.println("Town found in cache");
                 return townCache.get(key);
             }
         }
