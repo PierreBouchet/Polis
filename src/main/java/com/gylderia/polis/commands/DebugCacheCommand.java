@@ -35,7 +35,7 @@ public class DebugCacheCommand implements CommandExecutor {
                 sender.sendMessage("Town: " + town.getName());
                 sender.sendMessage("Ranks in Town:");
                 for (Rank rank : town.getRanks().values()) {
-                    sender.sendMessage("Rank UUID: " + Arrays.toString(rank.getUuid()) + ", Display Name: " + rank.getDisplayName() + ", Default: " + rank.isDefault() + ", Leader: " + rank.isLeader());
+                    sender.sendMessage( " Display Name: " + rank.getDisplayName() + ", Default: " + rank.isDefault() + ", Leader: " + rank.isLeader());
                 }
             } else {
                 sender.sendMessage("Town: None");
@@ -49,7 +49,7 @@ public class DebugCacheCommand implements CommandExecutor {
             sender.sendMessage("UUID: " + Arrays.toString(town.getUuid()) + ", Name: " + town.getName());
             sender.sendMessage("Ranks in Town:");
             for (Rank rank : town.getRanks().values()) {
-                sender.sendMessage("Rank UUID: " + Arrays.toString(rank.getUuid()) + ", Display Name: " + rank.getDisplayName() + ", Default: " + rank.isDefault() + ", Leader: " + rank.isLeader());
+                sender.sendMessage("Display Name: " + rank.getDisplayName() + ", Default: " + rank.isDefault() + ", Leader: " + rank.isLeader());
             }
         }
 
