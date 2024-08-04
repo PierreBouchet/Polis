@@ -13,6 +13,7 @@ public class GylderiaPlayer {
         this.town = town;
         this.uuid = uuid;
         this.name = name;
+        this.rank = rank;
     }
 
     public GylderiaPlayer(UUID uuid, String name) {
