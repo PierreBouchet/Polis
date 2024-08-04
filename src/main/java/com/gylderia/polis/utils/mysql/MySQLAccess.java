@@ -40,8 +40,6 @@ public class MySQLAccess implements MySQLAPI {
         }
     }
 
-
-
     /**
      * Establishes a connection to a MySQL database using the provided parameters.
      * It uses the HikariCP library to manage the connection pool.
@@ -60,6 +58,7 @@ public class MySQLAccess implements MySQLAPI {
         config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
         config.setUsername(username);
         config.setPassword(password);
+        config.setMaximumPoolSize(10); // Set the pool size here
 
         dataSource = new HikariDataSource(config);
     }
@@ -72,7 +71,7 @@ public class MySQLAccess implements MySQLAPI {
      */
     @Override
     public Connection getConnection() throws SQLException {
-        if (dataSource.getConnection() == null) {
+        if (dataSource == null || dataSource.isClosed()) {
             connect();
         }
         return dataSource.getConnection();

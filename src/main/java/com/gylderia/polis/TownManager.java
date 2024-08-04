@@ -76,15 +76,16 @@ public class TownManager {
         return townDefaultRankList;
     }
 
-    public void addRankToDataBase(Rank rank) {
+    public void addRankToDataBase(Rank rank, Town town) {
         try {
             PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
-                    "INSERT INTO rangs (ville, rang, displayName, isDefault, isLeader) VALUES (?, ?, ?, ?)"
+                    "INSERT INTO rangs (rang, displayName, isDefault, isLeader, ville) VALUES (?, ?, ?, ?, ?)"
             );
             stmt.setBytes(1, rank.getUuid());
             stmt.setString(2, new String(rank.getDisplayName().getBytes(), StandardCharsets.UTF_8));
             stmt.setBoolean(3, rank.isDefault());
             stmt.setBoolean(4, rank.isLeader());
+            stmt.setBytes(5, town.getUuid());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,7 +108,7 @@ public class TownManager {
             cacheManager.putTown(uuidBytes, town);
             //pour chaque rang dans newTownRankList, appeler la méthode addRankToDataBase
             for (Rank rank : newTownRankList.values()) {
-                addRankToDataBase(rank);
+                addRankToDataBase(rank, town);
             }
             return town;
         } catch (SQLException e) {
