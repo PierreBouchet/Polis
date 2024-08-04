@@ -64,6 +64,10 @@ public class TownManager {
             //TODO ajouter un rang leader par défaut via un enum par exemple
             return false;
         }
+        //debug message
+        for (Rank rank : defaultRankList.values()) {
+            plugin.getLogger().info("Rank: " + rank.getDisplayName() + ", Default: " + rank.isDefault() + ", Leader: " + rank.isLeader());
+        }
         return true;
     }
 
@@ -149,7 +153,13 @@ public class TownManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        //debug message
+        for (Town town : cacheManager.getTownCache().values()) {
+            plugin.getLogger().info("Town: " + town.getName());
+            for (Rank rank : town.getRanks().values()) {
+                plugin.getLogger().info("Rank: " + rank.getDisplayName() + ", Default: " + rank.isDefault() + ", Leader: " + rank.isLeader());
+            }
+        }
     }
 
 
