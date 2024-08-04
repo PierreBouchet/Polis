@@ -51,7 +51,7 @@ public class PlayerManager {
                     "UPDATE players SET ville = ?, rang = ? WHERE uuid = ?"
             );
             stmt.setBytes(1, townUUIDBytes);
-            stmt.setString(2, rank.getDisplayName());
+            stmt.setBytes(2, rank.getUuid());
             stmt.setBytes(3, uuidBytes);
             stmt.executeUpdate();
         } catch (SQLException e) {
