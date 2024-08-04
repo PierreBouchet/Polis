@@ -1,9 +1,6 @@
 package com.gylderia.polis;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Town {
     private final String name;
@@ -56,7 +53,13 @@ public class Town {
     }
 
     public Rank getRank(byte[] uuid) {
-        return rankList.get(uuid);
+        //return rank using equals method
+        for (byte[] key : rankList.keySet()) {
+            if (Arrays.equals(key, uuid)) {
+                return rankList.get(key);
+            }
+        }
+        return null;
     }
 
     public boolean removeRank(byte[] uuid) {
