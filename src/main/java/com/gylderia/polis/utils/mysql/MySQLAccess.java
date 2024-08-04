@@ -2,16 +2,45 @@ package com.gylderia.polis.utils.mysql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class MySQLAccess implements MySQLAPI {
 
+    private FileConfiguration mysqlConfigFile;
+    private String host;
+    private String port;
+    private String database;
+    private String username;
+    private String password;
+
     /**
      * The HikariDataSource object that manages the connection pool.
      */
     private HikariDataSource dataSource;
+
+    public MySQLAccess(FileConfiguration mysqlConfigFile) {
+        this.mysqlConfigFile = mysqlConfigFile;
+        this.host = mysqlConfigFile.getString("host");
+        this.port = mysqlConfigFile.getString("port");
+        this.database = mysqlConfigFile.getString("database");
+        this.username = mysqlConfigFile.getString("username");
+        this.password =  mysqlConfigFile.getString("password");
+    }
+
+    public boolean connect() {
+        try {
+            establishConnection(host, port, database, username, password);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
     /**
      * Establishes a connection to a MySQL database using the provided parameters.
@@ -26,6 +55,7 @@ public class MySQLAccess implements MySQLAPI {
      */
     @Override
     public void establishConnection(String host, String port, String database, String username, String password) throws SQLException {
+
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
         config.setUsername(username);
@@ -42,6 +72,9 @@ public class MySQLAccess implements MySQLAPI {
      */
     @Override
     public Connection getConnection() throws SQLException {
+        if (dataSource.getConnection() == null) {
+            connect();
+        }
         return dataSource.getConnection();
     }
 

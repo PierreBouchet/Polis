@@ -1,5 +1,6 @@
 package com.gylderia.polis;
 
+import com.gylderia.polis.utils.mysql.MySQLAccess;
 import com.gylderia.polis.utils.utils;
 import org.bukkit.entity.Player;
 
@@ -12,12 +13,12 @@ import java.util.UUID;
 
 public class PlayerManager {
 
-    private Connection connection;
+    private MySQLAccess mySQLAccess;
     private Polis plugin;
     private CacheManager cacheManager;
 
-    public PlayerManager(Connection connection, Polis polis) {
-        this.connection = connection;
+    public PlayerManager(MySQLAccess mySQLAccess, Polis polis) {
+        this.mySQLAccess = mySQLAccess;
         this.plugin = polis;
         this.cacheManager = plugin.getCacheManager();
     }
@@ -28,7 +29,7 @@ public class PlayerManager {
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
 
         try {
-            PreparedStatement stmt = connection.prepareStatement(
+            PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
                     "INSERT INTO players (uuid, name) VALUES (?, ?)"
             );
             stmt.setBytes(1, uuidBytes);
@@ -41,16 +42,17 @@ public class PlayerManager {
         System.out.println("Player cached: " + (cacheManager.getPlayer(uuid) != null));
     }
 
-    public void setPlayerTown(UUID uuid, Town town) {
+    public void setPlayerTown(UUID uuid, Town town, Rank rank) { //TODO dupliquer la méthode pour gérer le rang par défautt
+        //TODO Probablement à supprimer stocker en cache et plus directement en BDD (cf TownCreate)
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
         byte[] townUUIDBytes = town.getUuid();
-
         try {
-            PreparedStatement stmt = connection.prepareStatement(
-                    "UPDATE players SET ville = ? WHERE uuid = ?"
+            PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
+                    "UPDATE players SET ville = ?, rang = ? WHERE uuid = ?"
             );
             stmt.setBytes(1, townUUIDBytes);
-            stmt.setBytes(2, uuidBytes);
+            stmt.setString(2, rank.getDisplayName());
+            stmt.setBytes(3, uuidBytes);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -60,7 +62,7 @@ public class PlayerManager {
     public boolean isPlayerInDatabase(UUID uuid) {
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
         try {
-            PreparedStatement stmt = connection.prepareStatement(
+            PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
                     "SELECT COUNT(*) FROM players WHERE uuid = ?"
             );
             stmt.setBytes(1, uuidBytes);
@@ -78,21 +80,28 @@ public class PlayerManager {
         System.out.println("Loading player " + player.getName());
         UUID uniqueId = player.getUniqueId();
         String playerName = player.getName();
+        Rank rank;
         byte[] uuidBytes = utils.convertUUIDtoBytes(uniqueId);
         try {
-            PreparedStatement stmt = connection.prepareStatement(
+            PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
                     "SELECT * FROM players WHERE uuid = ?"
             );
             stmt.setBytes(1, uuidBytes);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) { // Move cursor to the first row
                 byte[] townUUIDBytes = rs.getBytes("ville");
+                byte[] rang = rs.getBytes("rang");
+                    System.out.println("Player " + playerName + " has a custom rank");
+                    //TODO Gérer custom ranks
+                    rank = cacheManager.getTown(townUUIDBytes).getRank(rang);
+
+
                 //debug message
                 System.out.println("Town UUID: " + Arrays.toString(townUUIDBytes));
                 if (townUUIDBytes != null) {
                     System.out.println(cacheManager.getTown(townUUIDBytes));
                     System.out.println("Player " + playerName + " has a town");
-                    cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName));
+                    cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName, rank));
                 } else {
                     System.out.println("Player " + playerName + " does not have a town");
                     cacheManager.putPlayer(uniqueId, new GylderiaPlayer(uniqueId, playerName));

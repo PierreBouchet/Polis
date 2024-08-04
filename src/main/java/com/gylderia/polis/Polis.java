@@ -4,8 +4,10 @@ import com.gylderia.polis.commands.DebugCacheCommand;
 import com.gylderia.polis.listeners.PlayerJoinListener;
 import com.gylderia.polis.utils.ConfigManager;
 import com.gylderia.polis.utils.mysql.MySQLAccess;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
@@ -16,43 +18,32 @@ public final class Polis extends JavaPlugin {
     private CacheManager cacheManager;
     private PlayerManager playerManager;
 
+    private ConfigManager configManager;
+
     @Override
     public void onEnable() {
         // Initialize the ConfigManager and load configurations
-        ConfigManager configManager = new ConfigManager(this);
+         this.configManager = new ConfigManager(this);
         configManager.setupConfig(); // Ensure the config is set up before accessing it
 
-        String host = configManager.getConfig().getString("host");
-        String port = configManager.getConfig().getString("port");
-        String database = configManager.getConfig().getString("database");
-        String username = configManager.getConfig().getString("username");
-        String password = configManager.getConfig().getString("password");
+        FileConfiguration mysqlConfigFile = configManager.getConfig("mysql/config.yml");
 
-        MySQLAccess mySQLAccess = new MySQLAccess();
-        try {
+        MySQLAccess mySQLAccess = new MySQLAccess(mysqlConfigFile);
+            if (!mySQLAccess.connect()) {
+                getLogger().log(Level.SEVERE,"Could not establish a connection to the database: ");
+                getServer().getPluginManager().disablePlugin(this);
+            }
+        this.cacheManager = new CacheManager();
+        this.playerManager = new PlayerManager(mySQLAccess, this);
+        this.townManager = new TownManager(mySQLAccess, this);
 
-            mySQLAccess.establishConnection(host, port, database, username, password);
-            getLogger().info("Successfully established a connection to the database.");
-            this.cacheManager = new CacheManager();
-            this.playerManager = new PlayerManager(mySQLAccess.getConnection(), this);
-            this.townManager = new TownManager(mySQLAccess.getConnection(), this);
+        registerEvents();
 
-            registerEvents();
-
-            this.getCommand("debugcache").setExecutor(new DebugCacheCommand(this));
-
-        } catch (SQLException e) {
-            getLogger().log(Level.SEVERE,"Could not establish a connection to the database: ", e);
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        this.getCommand("debugcache").setExecutor(new DebugCacheCommand(this));
 
         getLogger().info("Polis plugin enabled");
     }
 
-    public TownManager getTownManager() {
-        return townManager;
-    }
 
     public CacheManager getCacheManager() {
         return cacheManager;
@@ -60,6 +51,10 @@ public final class Polis extends JavaPlugin {
 
     public PlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
     public void registerEvents() {

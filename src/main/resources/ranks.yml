@@ -1,0 +1,13 @@
+ranks:
+  leader:
+    displayName: "chef"
+    leader: true
+  coleader:
+    displayName: "bras droit"
+  officer:
+    displayName: "officier"
+  member:
+    displayName: "membre"
+  recruit:
+    default: true
+    displayName: "recrue"

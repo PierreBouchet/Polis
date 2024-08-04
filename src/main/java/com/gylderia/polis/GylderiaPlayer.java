@@ -7,7 +7,9 @@ public class GylderiaPlayer {
     private final UUID uuid;
     private  String name;
 
-    public GylderiaPlayer(Town town, UUID uuid, String name) {
+    private Rank rank;
+
+    public GylderiaPlayer(Town town, UUID uuid, String name, Rank rank) {
         this.town = town;
         this.uuid = uuid;
         this.name = name;
@@ -44,4 +46,13 @@ public class GylderiaPlayer {
     public boolean hasTown() {
         return town != null;
     }
+
+    public Rank getRank() {
+        return rank;
+    }
+
+    public void setRank(Rank rank) {
+        this.rank = rank;
+    }
 }
+

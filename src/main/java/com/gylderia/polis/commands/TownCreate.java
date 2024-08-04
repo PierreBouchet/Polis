@@ -34,8 +34,10 @@ public class TownCreate implements CommandExecutor {
                     if (!cacheManager.getPlayer(player.getUniqueId()).hasTown()) {
                         //create town
                         Town town = townManager.newTown(args[0]);
-                        playerManager.setPlayerTown(uuid, town);
+                        //save in bdd
+                        playerManager.setPlayerTown(uuid, town, town.getLeaderRank()); //TODO stocker en cache et plus directement en BDD (voir PlayerManager)
                         cacheManager.getPlayer(uuid).setTown(town);
+                        cacheManager.getPlayer(uuid).setRank(town.getLeaderRank());
                     } else {
                         player.sendMessage("You are already in a town!");
                     }
