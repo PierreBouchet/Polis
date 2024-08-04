@@ -33,10 +33,8 @@ public class DebugCacheCommand implements CommandExecutor {
             if (player.hasTown()) {
                 Town town = player.getTown();
                 sender.sendMessage("Town: " + town.getName());
-                sender.sendMessage("Ranks in Town:");
-                for (Rank rank : town.getRanks().values()) {
-                    sender.sendMessage( " Display Name: " + rank.getDisplayName() + ", Default: " + rank.isDefault() + ", Leader: " + rank.isLeader());
-                }
+                //send player rank
+                sender.sendMessage("Rank: " + player.getRank().getDisplayName());
             } else {
                 sender.sendMessage("Town: None");
             }
