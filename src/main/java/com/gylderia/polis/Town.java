@@ -57,7 +57,7 @@ public class Town {
         for (byte[] key : rankList.keySet()) {
             if (Arrays.equals(key, uuid)) {
                 //debug message
-                System.out.println("Rank found: ");
+                System.out.println("Rank found: " + rankList.get(key).getDisplayName());
                 return rankList.get(key);
             }
         }
