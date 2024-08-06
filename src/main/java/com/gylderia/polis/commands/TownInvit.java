@@ -36,6 +36,10 @@ public class TownInvit implements CommandExecutor {
                 commandSender.sendMessage("This player is not online!");
                 return true;
             }
+            if (target == player) {
+                commandSender.sendMessage("You cannot invite yourself to join your town!");
+                return true;
+            }
             if (cacheManager.getPlayer(player.getUniqueId()).hasTown()) {
                 Town town = cacheManager.getPlayer(player.getUniqueId()).getTown();
                 town.addJoinTownInvitation(cacheManager.getPlayer(target.getUniqueId()));
