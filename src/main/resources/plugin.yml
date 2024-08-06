@@ -9,3 +9,9 @@ commands:
   debugcache:
     description: Debug cache
     usage: /debugcache
+  jointown:
+    description: Join a town
+    usage: /joinTown <name>
+  towninvite:
+    description: Invite a player to your town
+    usage: /towninvite <name>

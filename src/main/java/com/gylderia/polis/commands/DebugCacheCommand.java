@@ -2,9 +2,9 @@ package com.gylderia.polis.commands;
 
 import com.gylderia.polis.CacheManager;
 import com.gylderia.polis.Polis;
-import com.gylderia.polis.Town;
-import com.gylderia.polis.GylderiaPlayer;
-import com.gylderia.polis.Rank;
+import com.gylderia.polis.models.Town;
+import com.gylderia.polis.models.GylderiaPlayer;
+import com.gylderia.polis.models.Rank;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

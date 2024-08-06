@@ -1,15 +1,15 @@
 package com.gylderia.polis;
 
 import com.gylderia.polis.commands.TownCreate;
-import com.gylderia.polis.utils.ConfigManager;
-import com.gylderia.polis.utils.mysql.MySQLAPI;
+import com.gylderia.polis.commands.TownInvit;
+import com.gylderia.polis.commands.joinTown;
+import com.gylderia.polis.models.Rank;
+import com.gylderia.polis.models.Town;
 import com.gylderia.polis.utils.mysql.MySQLAccess;
 import com.gylderia.polis.utils.utils;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,6 +35,8 @@ public class TownManager {
         getRankConfig();
         loadAllTowns();
         plugin.getCommand("towncreate").setExecutor(new TownCreate(plugin, this));
+        plugin.getCommand("jointown").setExecutor(new joinTown(plugin, this));
+        plugin.getCommand("towninvite").setExecutor(new TownInvit(plugin, this));
     }
 
     public boolean getRankConfig() {

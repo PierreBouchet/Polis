@@ -1,6 +1,7 @@
 package com.gylderia.polis;
 
-import org.bukkit.entity.Player;
+import com.gylderia.polis.models.GylderiaPlayer;
+import com.gylderia.polis.models.Town;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,6 +48,15 @@ public class CacheManager {
 
     public Map<byte[], Town> getTownCache() {
         return townCache;
+    }
+
+    public Town getTownByName(String name) {
+        for (Town town : townCache.values()) {
+            if (town.getName().equals(name)) {
+                return town;
+            }
+        }
+        return null;
     }
 
 

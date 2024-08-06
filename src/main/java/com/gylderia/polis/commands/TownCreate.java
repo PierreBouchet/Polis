@@ -1,7 +1,7 @@
 package com.gylderia.polis.commands;
 
-import com.google.common.cache.Cache;
 import com.gylderia.polis.*;
+import com.gylderia.polis.models.Town;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

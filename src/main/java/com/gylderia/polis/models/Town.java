@@ -1,6 +1,14 @@
-package com.gylderia.polis;
+package com.gylderia.polis.models;
+
+import com.gylderia.polis.joinTownInvitation;
+import com.gylderia.polis.models.GylderiaPlayer;
+import com.gylderia.polis.models.Rank;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class Town {
     private final String name;
@@ -10,12 +18,17 @@ public class Town {
     private Rank leaderRank;
     private Map<byte[], Rank> rankList;
     private final byte[] uuid;
+    private final Map<UUID, joinTownInvitation> joinTownInvitations = new HashMap<>();
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private ScheduledFuture<?> scheduledFuture;
+
 
     public Town(String name, Date creationDate, byte[] uuid, Map<byte[], Rank> rankList) {       //TODO intéger map <String , Rank> pour gérer les ranks custom
         this.name = name;
         this.creationDate = creationDate;
         this.uuid = uuid;
         this.rankList = rankList;
+
 
         for (Rank rank : rankList.values()) {
             if (rank.isDefault()) {
@@ -95,4 +108,51 @@ public class Town {
     public void setLeaderRank(Rank leaderRank) {
         this.leaderRank = leaderRank;
     }
+
+    public void addJoinTownInvitation(GylderiaPlayer player) {
+        //si c'est la première invitation, on lance le scheduler
+        if (joinTownInvitations.isEmpty()) {
+            startScheduler();
+        }
+        joinTownInvitations.put(player.getUuid(), new joinTownInvitation(player, this));
+    }
+
+    public void removeJoinTownInvitation(GylderiaPlayer player) {
+        if (joinTownInvitations.size() == 1) {
+            stopScheduler();
+        }
+        joinTownInvitations.remove(player.getUuid());
+
+    }
+
+    public joinTownInvitation getJoinTownInvitation(GylderiaPlayer player) {
+        return joinTownInvitations.get(player.getUuid());
+    }
+
+    public boolean hasJoinTownInvitation(GylderiaPlayer player) {
+        return joinTownInvitations.containsKey(player.getUuid());
+    }
+
+    public void removeExpiredJoinTownInvitations() {
+        Date now = new Date();
+        for (joinTownInvitation invitation : joinTownInvitations.values()) {
+            //si l'invitation a plus de 10 minutes, on la retire
+            if (now.getTime() - invitation.getCreationTime().getTime() > 600000) {
+                removeJoinTownInvitation(invitation.getPlayer());
+            }
+        }
+    }
+
+    private void startScheduler() {
+        if (scheduledFuture == null || scheduledFuture.isCancelled()) {
+            scheduledFuture = scheduler.scheduleAtFixedRate(this::removeExpiredJoinTownInvitations, 0, 1, TimeUnit.MINUTES);
+        }
+    }
+
+    private void stopScheduler() {
+        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(false);
+        }
+    }
+
 }

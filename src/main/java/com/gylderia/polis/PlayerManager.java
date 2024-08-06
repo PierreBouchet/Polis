@@ -1,10 +1,12 @@
 package com.gylderia.polis;
 
+import com.gylderia.polis.models.GylderiaPlayer;
+import com.gylderia.polis.models.Rank;
+import com.gylderia.polis.models.Town;
 import com.gylderia.polis.utils.mysql.MySQLAccess;
 import com.gylderia.polis.utils.utils;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -112,4 +114,5 @@ public class PlayerManager {
             e.printStackTrace();
         }
     }
+
 }

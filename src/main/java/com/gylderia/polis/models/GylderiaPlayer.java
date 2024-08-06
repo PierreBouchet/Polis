@@ -1,9 +1,9 @@
-package com.gylderia.polis;
+package com.gylderia.polis.models;
 
 import java.util.UUID;
 
 public class GylderiaPlayer {
-    private  Town town;
+    private Town town;
     private final UUID uuid;
     private  String name;
 
@@ -54,6 +54,10 @@ public class GylderiaPlayer {
 
     public void setRank(Rank rank) {
         this.rank = rank;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 }
 
