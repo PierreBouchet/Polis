@@ -97,12 +97,16 @@ public class PlayerManager {
                 System.out.println("Town UUID: " + Arrays.toString(townUUIDBytes));
                 if (cacheManager.getTown(townUUIDBytes) != null) {
                     System.out.println("Player " + playerName + " has a town");
+                    Town town = cacheManager.getTown(townUUIDBytes);
                     rank = cacheManager.getTown(townUUIDBytes).getRank(rang);
                     if (rank == null) {
                         System.out.println("Rank not found in town");
                     }
                     System.out.println(cacheManager.getTown(townUUIDBytes));
-                    cacheManager.putPlayer(uniqueId, new GylderiaPlayer(cacheManager.getTown(townUUIDBytes), uniqueId, playerName, rank));
+                    GylderiaPlayer gylderiaPlayer = new GylderiaPlayer(town, uniqueId, playerName, rank);
+                    cacheManager.putPlayer(uniqueId, gylderiaPlayer);
+                    town.addPlayer(gylderiaPlayer);
+
                 } else {
                     System.out.println("Player " + playerName + " does not have a town");
                     cacheManager.putPlayer(uniqueId, new GylderiaPlayer(uniqueId, playerName));

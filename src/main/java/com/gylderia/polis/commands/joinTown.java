@@ -38,6 +38,7 @@ public class joinTown implements CommandExecutor {
                         playerManager.setPlayerTown(player.getUniqueId(), town, town.getDefaultRank());
                         cacheManager.getPlayer(player.getUniqueId()).setTown(town);
                         cacheManager.getPlayer(player.getUniqueId()).setRank(town.getDefaultRank());
+                        town.addPlayer(gylderiaPlayer);
                         town.removeJoinTownInvitation(gylderiaPlayer);
                     } else {
                         sender.sendMessage("You do not have an invitation to join this town!");

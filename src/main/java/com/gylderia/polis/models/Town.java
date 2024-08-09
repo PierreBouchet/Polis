@@ -1,9 +1,5 @@
 package com.gylderia.polis.models;
 
-import com.gylderia.polis.joinTownInvitation;
-import com.gylderia.polis.models.GylderiaPlayer;
-import com.gylderia.polis.models.Rank;
-
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,16 +7,17 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Town {
-    private final String name;
+    private String name;
     private final Date creationDate;
 
     private Rank defaultRank;
     private Rank leaderRank;
     private Map<byte[], Rank> rankList;
     private final byte[] uuid;
-    private final Map<UUID, joinTownInvitation> joinTownInvitations = new HashMap<>();
+    private  Map<UUID, joinTownInvitation> joinTownInvitations = new HashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> scheduledFuture;
+    private  Map<UUID, GylderiaPlayer> players = new HashMap<>();
 
 
     public Town(String name, Date creationDate, byte[] uuid, Map<byte[], Rank> rankList) {       //TODO intéger map <String , Rank> pour gérer les ranks custom
@@ -155,4 +152,15 @@ public class Town {
         }
     }
 
+    public void addPlayer(GylderiaPlayer player) {
+        players.put(player.getUuid(), player);
+    }
+
+    public void removePlayer(GylderiaPlayer player) {
+        players.remove(player.getUuid());
+    }
+
+    public Map<UUID, GylderiaPlayer> getPlayers() {
+        return players;
+    }
 }

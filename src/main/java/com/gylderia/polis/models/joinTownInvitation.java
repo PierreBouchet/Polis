@@ -1,4 +1,4 @@
-package com.gylderia.polis;
+package com.gylderia.polis.models;
 
 import com.gylderia.polis.models.GylderiaPlayer;
 import com.gylderia.polis.models.Town;
