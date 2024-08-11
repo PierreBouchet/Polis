@@ -34,9 +34,9 @@ public class TownManager {
         this.cacheManager = plugin.getCacheManager();
         getRankConfig();
         loadAllTowns();
-        plugin.getCommand("towncreate").setExecutor(new TownCreate(plugin, this));
-        plugin.getCommand("jointown").setExecutor(new joinTown(plugin, this));
-        plugin.getCommand("towninvite").setExecutor(new TownInvit(plugin, this));
+        plugin.getCommand("towncreate").setExecutor(new TownCreate(plugin));
+        plugin.getCommand("jointown").setExecutor(new joinTown(plugin));
+        plugin.getCommand("towninvite").setExecutor(new TownInvit(plugin));
     }
 
     public boolean getRankConfig() {

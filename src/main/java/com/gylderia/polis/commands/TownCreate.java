@@ -9,16 +9,11 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class TownCreate implements CommandExecutor {
-    TownManager townManager;
-    CacheManager cacheManager;
-    PlayerManager playerManager;
+public class TownCreate extends BaseCommand {
 
-    public TownCreate(Polis plugin, TownManager townManager) {
+    public TownCreate(Polis plugin) {
 
-        this.townManager = townManager;
-        this.cacheManager = plugin.getCacheManager();
-        this.playerManager = plugin.getPlayerManager();
+        super(plugin);
 
     }
         @Override
@@ -35,7 +30,7 @@ public class TownCreate implements CommandExecutor {
                         //create town
                         Town town = townManager.newTown(args[0]);
                         //save in bdd
-                        playerManager.setPlayerTown(uuid, town, town.getLeaderRank()); //TODO stocker en cache et plus directement en BDD (voir PlayerManager)
+                        playerManager.savePlayerTownAndRankToDataBase(uuid, town, town.getLeaderRank()); //TODO stocker en cache et plus directement en BDD (voir PlayerManager)
                         cacheManager.getPlayer(uuid).setTown(town);
                         cacheManager.getPlayer(uuid).setRank(town.getLeaderRank());
                     } else {

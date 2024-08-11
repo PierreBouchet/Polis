@@ -13,12 +13,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
-public class DebugCacheCommand implements CommandExecutor {
-
-    private final CacheManager cacheManager;
+public class DebugCacheCommand extends BaseCommand {
 
     public DebugCacheCommand(Polis plugin) {
-        this.cacheManager = plugin.getCacheManager();
+        super(plugin);
     }
 
     @Override

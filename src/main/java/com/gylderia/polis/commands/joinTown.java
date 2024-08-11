@@ -8,16 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class joinTown implements CommandExecutor {
+public class joinTown  extends BaseCommand {
 
-    TownManager townManager;
-    CacheManager cacheManager;
-    PlayerManager playerManager;
-
-    public joinTown(Polis plugin, TownManager townManager) {
-        this.townManager = townManager;
-        this.cacheManager = plugin.getCacheManager();
-        this.playerManager = plugin.getPlayerManager();
+    public joinTown(Polis plugin) {
+        super(plugin);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -35,7 +29,7 @@ public class joinTown implements CommandExecutor {
                     //si le joueur a une invitation
                     if (town.hasJoinTownInvitation(gylderiaPlayer)) {
                         //on le met dans la ville
-                        playerManager.setPlayerTown(player.getUniqueId(), town, town.getDefaultRank());
+                        playerManager.savePlayerTownAndRankToDataBase(player.getUniqueId(), town, town.getDefaultRank());
                         cacheManager.getPlayer(player.getUniqueId()).setTown(town);
                         cacheManager.getPlayer(player.getUniqueId()).setRank(town.getDefaultRank());
                         town.addPlayer(gylderiaPlayer);

@@ -1,5 +1,7 @@
 package com.gylderia.polis.utils;
 
+import org.bukkit.Chunk;
+
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -11,4 +13,16 @@ public class utils {
         return uuidBytes;
 
     }
+
+    public static UUID convertBytesToUUID(byte[] uuids) {
+        String uuidString = new String(uuids, StandardCharsets.UTF_8);
+        return UUID.fromString(uuidString);
+    }
+
+    public static int[] getCoordinatesFromKey(long chunkKey) {
+        int x = (int) (chunkKey & 4294967295L);
+        int z = (int) (chunkKey >> 32);
+        return new int[]{x, z};
+    }
+
 }

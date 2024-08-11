@@ -15,3 +15,12 @@ commands:
   towninvite:
     description: Invite a player to your town
     usage: /towninvite <name>
+  unclaimchunk:
+    description: Unclaim a chunk
+    usage: /unclaimchunk
+  claimchunk:
+    description: Claim a chunk
+    usage: /claimchunk
+  chunkinfo:
+    description: Get info about a chunk
+    usage: /chunkinfo

@@ -20,6 +20,8 @@ public final class Polis extends JavaPlugin {
 
     private ConfigManager configManager;
 
+    private ChunkManager chunkManager;
+
     @Override
     public void onEnable() {
         // Initialize the ConfigManager and load configurations
@@ -34,8 +36,9 @@ public final class Polis extends JavaPlugin {
                 getServer().getPluginManager().disablePlugin(this);
             }
         this.cacheManager = new CacheManager();
-        this.playerManager = new PlayerManager(mySQLAccess, this);
         this.townManager = new TownManager(mySQLAccess, this);
+        this.chunkManager = new ChunkManager(mySQLAccess, this);
+        this.playerManager = new PlayerManager(mySQLAccess, this);
 
         registerEvents();
 
@@ -65,5 +68,13 @@ public final class Polis extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         getLogger().info("Polis plugin disabled");
+    }
+
+    public TownManager getTownManager() {
+        return townManager;
+    }
+
+    public ChunkManager getChunkManager() {
+        return chunkManager;
     }
 }

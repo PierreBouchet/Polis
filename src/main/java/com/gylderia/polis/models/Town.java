@@ -18,6 +18,7 @@ public class Town {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> scheduledFuture;
     private  Map<UUID, GylderiaPlayer> players = new HashMap<>();
+    private Map<Long, GylderiaChunk> chunks = new HashMap<>();
 
 
     public Town(String name, Date creationDate, byte[] uuid, Map<byte[], Rank> rankList) {       //TODO intéger map <String , Rank> pour gérer les ranks custom
@@ -163,4 +164,14 @@ public class Town {
     public Map<UUID, GylderiaPlayer> getPlayers() {
         return players;
     }
+
+    public void addChunk(GylderiaChunk chunk) {
+        chunks.put(chunk.getChunkKey(), chunk);
+    }
+
+    public void removeChunk(GylderiaChunk chunk) {
+        chunks.remove(chunk.getChunkKey());
+    }
+
+
 }

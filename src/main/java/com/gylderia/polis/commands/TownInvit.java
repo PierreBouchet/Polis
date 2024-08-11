@@ -11,16 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class TownInvit implements CommandExecutor {
+public class TownInvit extends BaseCommand {
 
-    TownManager townManager;
-    CacheManager cacheManager;
-    PlayerManager playerManager;
-
-    public TownInvit(Polis plugin, TownManager townManager) {
-        this.townManager = townManager;
-        this.cacheManager = plugin.getCacheManager();
-        this.playerManager = plugin.getPlayerManager();
+    public TownInvit(Polis plugin) {
+       super(plugin);
     }
 
     @Override

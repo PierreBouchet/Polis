@@ -7,6 +7,7 @@ import com.gylderia.polis.utils.mysql.MySQLAccess;
 import com.gylderia.polis.utils.utils;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,7 +45,7 @@ public class PlayerManager {
         System.out.println("Player cached: " + (cacheManager.getPlayer(uuid) != null));
     }
 
-    public void setPlayerTown(UUID uuid, Town town, Rank rank) { //TODO dupliquer la méthode pour gérer le rang par défautt
+    public void savePlayerTownAndRankToDataBase(UUID uuid, Town town, Rank rank) { //TODO dupliquer la méthode pour gérer le rang par défautt
         //TODO Probablement à supprimer stocker en cache et plus directement en BDD (cf TownCreate)
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
         byte[] townUUIDBytes = town.getUuid();
@@ -119,4 +120,19 @@ public class PlayerManager {
         }
     }
 
+    public void loadPlayersOnStart() { //TODO doutes sur cette méthode + pas implantée
+        try {
+            Connection connection = mySQLAccess.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM players");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                UUID uuid = utils.convertBytesToUUID(rs.getBytes("uuid"));
+                if (plugin.getServer().getPlayer(uuid) != null) {
+                    loadPlayer(plugin.getServer().getPlayer(uuid));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,17 +1,19 @@
 package com.gylderia.polis;
 
+import com.gylderia.polis.models.GylderiaChunk;
 import com.gylderia.polis.models.GylderiaPlayer;
 import com.gylderia.polis.models.Town;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class CacheManager {
 
     private final Map<UUID, GylderiaPlayer> playerCache = new HashMap<>();
     private final Map<byte[], Town> townCache = new HashMap<>();
+
+
+
+    private final Map<Long, GylderiaChunk> chunkCache = new HashMap<>();
 
     public void putTown(byte[] uuid, Town town) {
         townCache.put(uuid, town);
@@ -59,6 +61,21 @@ public class CacheManager {
         return null;
     }
 
+    public void putChunk(GylderiaChunk chunk) {
+        chunkCache.put(chunk.getChunkKey(), chunk);
+    }
+
+    public GylderiaChunk getChunk(long chunkKey) {
+        return chunkCache.get(chunkKey);
+    }
+
+    public void removeChunk(long chunkKey) {
+        chunkCache.remove(chunkKey);
+    }
+
+    public boolean isChunkCached(long chunkKey) {
+        return chunkCache.containsKey(chunkKey);
+    }
 
 }
 
