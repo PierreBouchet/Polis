@@ -41,10 +41,15 @@ public final class Polis extends JavaPlugin {
         this.playerManager = new PlayerManager(mySQLAccess, this);
 
         registerEvents();
-
-        this.getCommand("debugcache").setExecutor(new DebugCacheCommand(this));
+        registerCommands();
 
         getLogger().info("Polis plugin enabled");
+    }
+
+    public void registerCommands() {
+        this.getCommand("debugcache").setExecutor(new DebugCacheCommand(this));
+        this.townManager.registerCommands();
+        this.chunkManager.registerCommands();
     }
 
 

@@ -31,10 +31,10 @@ public class PlayerManager {
         UUID uuid = player.getUniqueId();
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
 
-        try {
-            PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
+        try (Connection conn = mySQLAccess.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
                     "INSERT INTO players (uuid, name) VALUES (?, ?)"
-            );
+            )) {
             stmt.setBytes(1, uuidBytes);
             stmt.setString(2, player.getName());
             stmt.executeUpdate();
@@ -49,10 +49,10 @@ public class PlayerManager {
         //TODO Probablement à supprimer stocker en cache et plus directement en BDD (cf TownCreate)
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
         byte[] townUUIDBytes = town.getUuid();
-        try {
-            PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
+        try (Connection conn = mySQLAccess.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
                     "UPDATE players SET ville = ?, rang = ? WHERE uuid = ?"
-            );
+            )) {
             stmt.setBytes(1, townUUIDBytes);
             stmt.setBytes(2, rank.getUuid());
             stmt.setBytes(3, uuidBytes);
@@ -64,14 +64,15 @@ public class PlayerManager {
 
     public boolean isPlayerInDatabase(UUID uuid) {
         byte[] uuidBytes = utils.convertUUIDtoBytes(uuid);
-        try {
-            PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
+        try (Connection conn = mySQLAccess.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
                     "SELECT COUNT(*) FROM players WHERE uuid = ?"
-            );
+            )) {
             stmt.setBytes(1, uuidBytes);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,35 +86,36 @@ public class PlayerManager {
         String playerName = player.getName();
         Rank rank;
         byte[] uuidBytes = utils.convertUUIDtoBytes(uniqueId);
-        try {
-            PreparedStatement stmt = mySQLAccess.getConnection().prepareStatement(
+        try (Connection conn = mySQLAccess.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
                     "SELECT * FROM players WHERE uuid = ?"
-            );
+            )) {
             stmt.setBytes(1, uuidBytes);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) { // Move cursor to the first row
-                byte[] townUUIDBytes = rs.getBytes("ville");
-                byte[] rang = rs.getBytes("rang");
-                //debug message
-                System.out.println("Town UUID: " + Arrays.toString(townUUIDBytes));
-                if (cacheManager.getTown(townUUIDBytes) != null) {
-                    System.out.println("Player " + playerName + " has a town");
-                    Town town = cacheManager.getTown(townUUIDBytes);
-                    rank = cacheManager.getTown(townUUIDBytes).getRank(rang);
-                    if (rank == null) {
-                        System.out.println("Rank not found in town");
-                    }
-                    System.out.println(cacheManager.getTown(townUUIDBytes));
-                    GylderiaPlayer gylderiaPlayer = new GylderiaPlayer(town, uniqueId, playerName, rank);
-                    cacheManager.putPlayer(uniqueId, gylderiaPlayer);
-                    town.addPlayer(gylderiaPlayer);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) { // Move cursor to the first row
+                    byte[] townUUIDBytes = rs.getBytes("ville");
+                    byte[] rang = rs.getBytes("rang");
+                    //debug message
+                    System.out.println("Town UUID: " + Arrays.toString(townUUIDBytes));
+                    if (cacheManager.getTown(townUUIDBytes) != null) {
+                        System.out.println("Player " + playerName + " has a town");
+                        Town town = cacheManager.getTown(townUUIDBytes);
+                        rank = cacheManager.getTown(townUUIDBytes).getRank(rang);
+                        if (rank == null) {
+                            System.out.println("Rank not found in town");
+                        }
+                        System.out.println(cacheManager.getTown(townUUIDBytes));
+                        GylderiaPlayer gylderiaPlayer = new GylderiaPlayer(town, uniqueId, playerName, rank);
+                        cacheManager.putPlayer(uniqueId, gylderiaPlayer);
+                        town.addPlayer(gylderiaPlayer);
 
+                    } else {
+                        System.out.println("Player " + playerName + " does not have a town");
+                        cacheManager.putPlayer(uniqueId, new GylderiaPlayer(uniqueId, playerName));
+                    }
                 } else {
-                    System.out.println("Player " + playerName + " does not have a town");
-                    cacheManager.putPlayer(uniqueId, new GylderiaPlayer(uniqueId, playerName));
+                    System.out.println("No player found with UUID: " + uniqueId);
                 }
-            } else {
-                System.out.println("No player found with UUID: " + uniqueId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -121,10 +123,9 @@ public class PlayerManager {
     }
 
     public void loadPlayersOnStart() { //TODO doutes sur cette méthode + pas implantée
-        try {
-            Connection connection = mySQLAccess.getConnection();
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM players");
-            ResultSet rs = stmt.executeQuery();
+        try (Connection conn = mySQLAccess.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM players");
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 UUID uuid = utils.convertBytesToUUID(rs.getBytes("uuid"));
                 if (plugin.getServer().getPlayer(uuid) != null) {

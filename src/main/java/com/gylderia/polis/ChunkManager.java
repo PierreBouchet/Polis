@@ -27,10 +27,12 @@ public class ChunkManager {
         this.cacheManager = polis.getCacheManager();
         this.townManager = polis.getTownManager();
         cacheChunks();
+    }
+
+    public void registerCommands() {
         polis.getCommand("chunkinfo").setExecutor(new chunkInfo(polis));
         polis.getCommand("claimchunk").setExecutor(new claimChunk(polis));
         polis.getCommand("unclaimchunk").setExecutor(new unclaimChunk(polis));
-
     }
 
     public void cacheChunks() {
@@ -38,12 +40,11 @@ public class ChunkManager {
             Connection connection = mySQLAccess.getConnection();
             String query = "SELECT * FROM chunks";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.execute();
-            preparedStatement.getResultSet().beforeFirst();
-            while (preparedStatement.getResultSet().next()) {
-                long chunkKey = preparedStatement.getResultSet().getLong("chunkKey");
-                Town town = cacheManager.getTown(preparedStatement.getResultSet().getBytes("townUUID"));
-                World world = polis.getServer().getWorld(preparedStatement.getResultSet().getString("world"));
+            var resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                long chunkKey = resultSet.getLong("chunkKey");
+                Town town = cacheManager.getTown(resultSet.getBytes("townUUID"));
+                World world = polis.getServer().getWorld(resultSet.getString("world"));
                 Chunk chunk = world.getChunkAt(chunkKey);
                 GylderiaChunk gylderiaChunk = new GylderiaChunk(chunk, town);
                 cacheManager.putChunk(gylderiaChunk);
@@ -68,10 +69,10 @@ public class ChunkManager {
             cacheManager.putChunk(new GylderiaChunk(chunk, town));
         }
         town.addChunk(cacheManager.getChunk(key));
-        try {
-            Connection connection = mySQLAccess.getConnection();
-            String query = "INSERT INTO chunks (chunkKey, townUUID, world) VALUES (?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+        try (Connection connection = mySQLAccess.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO chunks (chunkKey, townUUID, world) VALUES (?, ?, ?)"
+            )) {
             preparedStatement.setLong(1, key);
             preparedStatement.setBytes(2, town.getUuid());
             preparedStatement.setString(3, chunk.getWorld().getName());
@@ -86,10 +87,10 @@ public class ChunkManager {
         if (cacheManager.isChunkCached(key)) {
             cacheManager.getChunk(key).setTown(null);
         }
-        try {
-            Connection connection = mySQLAccess.getConnection();
-            String query = "DELETE FROM chunks WHERE chunkKey = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+        try (Connection connection = mySQLAccess.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                    "DELETE FROM chunks WHERE chunkKey = ?"
+            )) {
             preparedStatement.setLong(1, key);
             preparedStatement.execute();
         } catch (Exception e) {
