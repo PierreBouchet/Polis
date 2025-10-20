@@ -1,9 +1,11 @@
 name: Deploy Plugin
 
-on:
-  push:
-    branches:
-      - main
+# Workflow paused - uncomment 'on:' section below to re-enable
+# on:
+#   push:
+#     branches:
+#       - main
+on: workflow_dispatch
 
 jobs:
   build-and-deploy:
